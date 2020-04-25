@@ -10,4 +10,4 @@ hooks:
   AfterInstall:
     - location: scripts/install_dependencies.sh
       timeout: 600
-      runas: ubuntu
+      runas: root
