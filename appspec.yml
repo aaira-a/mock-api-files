@@ -1,0 +1,34 @@
+version: 0.0
+
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/mock-api-files
+
+
+hooks:
+
+  ApplicationStop:
+    - location: scripts/stop_application.sh
+      timeout: 300
+      runas: ubuntu
+
+  BeforeInstall:
+    - location: scripts/delete_dependencies.sh
+      timeout: 300
+      runas: ubuntu
+
+  AfterInstall:
+    - location: scripts/change_files_ownership.sh
+      timeout: 300
+      runas: root
+
+    - location: scripts/install_dependencies.sh
+      timeout: 600
+      runas: ubuntu
+
+  ApplicationStart:
+    - location: scripts/start_application.sh
+      timeout: 300
+      runas: ubuntu
