@@ -14,6 +14,11 @@ hooks:
       timeout: 300
       runas: ubuntu
 
+  BeforeInstall:
+    - location: scripts/delete_dependencies.sh
+      timeout: 300
+      runas: ubuntu
+
   AfterInstall:
     - location: scripts/change_files_ownership.sh
       timeout: 300
