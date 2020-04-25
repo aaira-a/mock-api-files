@@ -9,6 +9,11 @@ files:
 
 hooks:
 
+  ApplicationStop:
+    - location: scripts/stop_application.sh
+      timeout: 300
+      runas: ubuntu
+
   AfterInstall:
     - location: scripts/change_files_ownership.sh
       timeout: 300
