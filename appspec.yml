@@ -1,0 +1,13 @@
+version: 0.0
+
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/mock-api-files
+
+hooks:
+  AfterInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 600
+      runas: ubuntu
