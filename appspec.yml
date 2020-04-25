@@ -8,6 +8,9 @@ files:
 
 hooks:
   AfterInstall:
+    - location: scripts/change_files_ownership.sh
+      timeout: 300
+      runas: root
     - location: scripts/install_dependencies.sh
       timeout: 600
-      runas: root
+      runas: ubuntu
