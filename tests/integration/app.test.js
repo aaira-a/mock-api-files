@@ -176,7 +176,7 @@ describe('POST /api/files/upload/base64', () => {
 });
 
 describe('POST /api/files/upload/form-data', () => {
-  it('should return uploaded file information in response', () => {
+  it('should support part with image content type', () => {
     return request(app)
       .post('/api/files/upload/form-data')
       .set('Content-Type', 'multipart/form-data')
@@ -184,7 +184,7 @@ describe('POST /api/files/upload/form-data', () => {
       .attach(
         'file1',
         'tests/fixtures/nasilemak.jpg',
-        { contentType: 'application/octet-stream', filename: 'nasilemak.jpg'}
+        {contentType: 'image/jpeg', filename: 'nasilemak.jpg'}
       )
       .then((response) => {
         expect(response.status).to.eql(200);
@@ -195,17 +195,17 @@ describe('POST /api/files/upload/form-data', () => {
         expect(response.body['size']).to.eql(3884192);
       })
   });
-});
 
-describe('POST /api/files/upload/octet-stream', () => {
-  it('should return uploaded file information in response', () => {
-    const file = fs.readFileSync('tests/fixtures/nasilemak.jpg');
+  it('should support part with octet-stream content type', () => {
     return request(app)
-      .post('/api/files/upload/octet-stream')
-      .set('Content-Type', 'application/octet-stream')
-      .set('Content-Disposition', 'attachment; filename=nasilemak.jpg')
-      .set('Custom-Name', 'nasilemak1.jpg')
-      .send(file)
+      .post('/api/files/upload/form-data')
+      .set('Content-Type', 'multipart/form-data')
+      .field('customName', 'nasilemak1.jpg')
+      .attach(
+        'file1',
+        'tests/fixtures/nasilemak.jpg',
+        {contentType: 'application/octet-stream', filename: 'nasilemak.jpg'}
+      )
       .then((response) => {
         expect(response.status).to.eql(200);
         expect(response.body['originalName']).to.eql('nasilemak.jpg');
