@@ -94,14 +94,13 @@ describe('ALL /api/echo/:status?', () => {
     });
   });
 
-  it('should return json request body in echo-body object', () => {
+  it('should return json request body in body object', () => {
     return request(app)
       .post('/api/echo')
       .set('Content-Type', 'application/json')
       .send({'key1': 'value1', 'key2': 'value2'})
       .then((response) => {
-        expect(response.body['echo-body-content-type']).to.include('application/json');
-        expect(response.body['echo-body']).to.eql({'key1': 'value1', 'key2': 'value2'});
+        expect(response.body).to.include({'key1': 'value1', 'key2': 'value2'});
       })
   });
 
