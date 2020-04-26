@@ -122,6 +122,20 @@ app.post('/api/files/upload/form-data', upload.single('file1'), async (req, res)
   res.json(response);
 });
 
+app.get('/api/files/download/octet-stream', (req, res) => {
+  const filepath = path.join(__dirname, 'files', 'publicdomain.png');
+  const file = fs.readFileSync(filepath);
+
+  res.set({
+    "originalName": "publicdomain.png",
+    "mimeType": "image/png",
+    "md5": "c9469b266705cf08cfa37f0cf834d11f",
+    "size": "6592"
+  });
+
+  res.send(file);
+});
+
 app.post('/api/files/upload/octet-stream', octetStreamParser, async (req, res) => {
 
   const hash = crypto.createHash('md5').update(req.body).digest("hex");

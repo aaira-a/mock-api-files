@@ -217,6 +217,23 @@ describe('POST /api/files/upload/form-data', () => {
   });
 });
 
+describe('POST /api/files/download/octet-stream', () => {
+  it('should return file in response', () => {
+
+    const file = fs.readFileSync('tests/fixtures/publicdomain.png');
+
+    return request(app)
+      .get('/api/files/download/octet-stream')
+      .expect(200)
+      .expect(file)
+      .expect('content-type', 'application/octet-stream')
+      .expect('originalName', 'publicdomain.png')
+      .expect('mimeType', 'image/png')
+      .expect('md5', 'c9469b266705cf08cfa37f0cf834d11f')
+      .expect('size', '6592')     
+  });
+});
+
 describe('POST /api/files/upload/octet-stream', () => {
   it('should return uploaded file information in response', (done) => {
     const req = request(app)
