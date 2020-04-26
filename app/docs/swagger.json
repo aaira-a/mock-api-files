@@ -284,11 +284,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "originalName": {
-                  "type": "string",
-                  "description": "Original file name Output",
-                  "x-ntx-summary": "Original file name Output"
-                },
                 "customName": {
                   "type": "string",
                   "description": "Custom file name Output",

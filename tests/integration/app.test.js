@@ -217,6 +217,29 @@ describe('POST /api/files/upload/form-data', () => {
   });
 });
 
+describe('POST /api/files/upload/octet-stream', () => {
+  it('should return uploaded file information in response', (done) => {
+    const req = request(app)
+      .post('/api/files/upload/octet-stream')
+      .set('Content-Type', 'application/octet-stream')
+      .set('Custom-Name', 'publicdomain1.jpg')
+      
+    const fileStream = fs.createReadStream('tests/fixtures/publicdomain.png');
+    fileStream.on('end', () => {
+      req.end((err, response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['customName']).to.eql('publicdomain1.jpg');
+        expect(response.body['mimeType']).to.eql('image/png');
+        expect(response.body['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
+        expect(response.body['size']).to.eql(6592);
+        done();
+      });
+    });
+
+    fileStream.pipe(req, {end: false});
+  });
+});
+
 describe('GET /api/files/download/uri', () => {
   it('should return file uri in response', () => {
     const fileUri = 'https://azamstatic.blob.core.windows.net/static/publicdomain.png';

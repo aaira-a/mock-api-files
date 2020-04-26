@@ -129,7 +129,6 @@ app.post('/api/files/upload/octet-stream', octetStreamParser, async (req, res) =
     .then((result) => {
 
       let response = {
-        "originalName": req.headers["content-disposition"].split("filename=")[1],
         "customName": req.headers["custom-name"],
         "mimeType": result["mime"],
         "md5": hash,
