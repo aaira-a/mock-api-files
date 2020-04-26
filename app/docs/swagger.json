@@ -96,8 +96,8 @@
     },
     "/files/download/base64": {
       "get": {
-        "summary": "Downloads file by base64",
-        "description": "Downloads file by base64",
+        "summary": "Download file as base64",
+        "description": "Download file as base64",
         "responses": {
           "200": {
             "description": "OK",
@@ -136,8 +136,8 @@
     },
     "/files/upload/base64": {
       "post": {
-        "summary": "Uploads file by base64",
-        "description": "Uploads file by base64",
+        "summary": "Upload file as base64",
+        "description": "Upload file as base64",
         "parameters": [
           {
             "in": "body",
@@ -196,8 +196,8 @@
     },
     "/files/upload/form-data": {
       "post": {
-        "summary": "Uploads file by multipart/form-data",
-        "description": "Uploads file by multipart/form-data",
+        "summary": "Upload file as multipart/form-data",
+        "description": "Upload file as multipart/form-data",
         "consumes": [
           "multipart/form-data"
         ],
@@ -255,8 +255,8 @@
     },
     "/files/download/octet-stream": {
       "get": {
-        "summary": "Downloads file by octet-stream",
-        "description": "Downloads file by octet-stream",
+        "summary": "Download file as octet-stream",
+        "description": "Download file as octet-stream",
         "responses": {
           "200": {
             "description": "OK",
@@ -295,8 +295,8 @@
     },
     "/files/upload/octet-stream": {
       "post": {
-        "summary": "Uploads file by octet-stream",
-        "description": "Uploads file by octet-stream",
+        "summary": "Upload file as octet-stream",
+        "description": "Upload file as octet-stream",
         "consumes": [
           "application/octet-stream"
         ],
@@ -352,8 +352,8 @@
     },
     "/files/download/uri": {
       "get": {
-        "summary": "Downloads file by URI",
-        "description": "Downloads file by URI",
+        "summary": "Download file as URI",
+        "description": "Download file as URI",
         "responses": {
           "200": {
             "description": "OK",
@@ -394,8 +394,8 @@
     },
     "/files/upload/uri": {
       "post": {
-        "summary": "Uploads file by URI",
-        "description": "Uploads file by URI",
+        "summary": "Upload file as URI",
+        "description": "Upload file as URI",
         "parameters": [
           {
             "in": "body",
