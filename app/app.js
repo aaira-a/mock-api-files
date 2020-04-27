@@ -17,6 +17,7 @@ const asyncCallbackRoute = require("./routes/asyncCallback");
 const sleepRoute = require("./routes/sleep");
 
 const octetStreamParser = bodyParser.raw({type: 'application/octet-stream', limit: '50mb'});
+const plainTextParser = bodyParser.text();
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded());
@@ -54,6 +55,33 @@ app.all('/api/echo/:status?', (req, res) => {
   response["echo-qs"] = req.query;
 
   response = {...response, ...req.body};
+
+  if (req.params.status !== undefined) {
+    res.status(req.params.status).json(response);
+  }
+  res.json(response);
+})
+
+app.all('/api/echo-from-text/:status?', plainTextParser, (req, res) => {
+  let response = {};
+
+  response["echo-method"] = req.method;
+  response["echo-headers"] = req.headers;
+  response["echo-qs"] = req.query;
+  response["echo-body-text"] = req.body;
+
+  function convertToJson(){
+    try {
+      return JSON.parse(req.body);
+    }
+    catch(error) {
+      return null;
+    }
+  }
+
+  let parsed = convertToJson();
+
+  response = {...response, ...parsed};
 
   if (req.params.status !== undefined) {
     res.status(req.params.status).json(response);

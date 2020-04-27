@@ -125,6 +125,85 @@ describe('ALL /api/echo/:status?', () => {
   });
 });
 
+describe('ALL /api/echo-from-text/:status?', () => {
+
+  it('should return 200 status', () => {
+    return request(app)
+      .get('/api/echo-from-text')
+      .then((response) => {
+        expect(response.status).to.eql(200)
+      })
+  });
+
+  it('should return request headers in echo-headers object, downcased keys', () => {
+    return request(app)
+      .get('/api/echo-from-text')
+      .set('Custom-Echo-Header', 'Random-Value-123')
+      .set('Another-Echo-Header', 'My value 456')
+      .then((response) => {
+        expect(response.body['echo-headers']['custom-echo-header']).to.eql('Random-Value-123');
+        expect(response.body['echo-headers']['another-echo-header']).to.eql('My value 456');
+      })
+  });
+
+  it('should return json response', () => {
+    return request(app)
+      .get('/api/echo-from-text')
+      .then((response) => {
+        expect(response.headers['content-type']).to.include('application/json');
+      })
+  });
+
+  it('should return query strings in echo-qs object', () => {
+    return request(app)
+      .get('/api/echo-from-text?abc=def&ghi=jkl')
+      .then((response) => {
+        expect(response.body['echo-qs']['abc']).to.eql('def');
+        expect(response.body['echo-qs']['ghi']).to.eql('jkl');
+      })
+  });
+
+  ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'].forEach((method) => {
+    it('should return ' + method + ' method in echo-method key', () => {
+      return request(app)
+        [method.toLowerCase()]('/api/echo-from-text')
+        .then((response) => {
+          expect(response.body['echo-method']).to.eql(method);
+        })
+    });
+  });
+
+  it('should return text request body in echo-body-text property', () => {
+    return request(app)
+      .post('/api/echo-from-text')
+      .set('Content-Type', 'text/plain')
+      .send('this is a text')
+      .then((response) => {
+        expect(response.body['echo-body-text']).to.eql('this is a text');
+      })
+  });
+
+  it('should convert text request body to json and return in body', () => {
+    return request(app)
+      .post('/api/echo-from-text')
+      .set('Content-Type', 'text/plain')
+      .send('{"key1": "value1", "key2": "value2"}')
+      .then((response) => {
+        expect(response.body).to.include({'key1': 'value1', 'key2': 'value2'});
+      })
+  });
+
+  [200, 400, 401, 403, 404, 405, 410, 500, 502, 503, 504].forEach((status) => {
+    it('should return ' + status + ' status if supplied in route parameter', () => {
+      return request(app)
+        .post('/api/echo-from-text/' + status.toString())
+        .then((response) => {
+          expect(response.status).to.eql(status);
+        })
+    });
+  });
+});
+
 describe('GET /api/files/errors/:status', () => {
   [200, 400, 401, 403, 404, 405, 410, 500, 502, 503, 504].forEach((status) => {
     it('should return ' + status + ' status supplied in route parameter', () => {

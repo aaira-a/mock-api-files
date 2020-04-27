@@ -62,6 +62,41 @@
         }
       }
     },
+    "/echo-from-text/{status}": {
+      "post": {
+        "summary": "Echoes text as json",
+        "description": "Echoes headers, querystring, and request body",
+        "consumes": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "status",
+            "description": "Status code to be returned",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "echoRequest",
+            "x-ntx-summary": "Text request body to be echoed as json",
+            "description": "{\"abc\": 123, \"def\": true, \"ghi\": \"value1\"}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/echoResponse"
+            }
+          }
+        }
+      }
+    },
     "/files/errors/{status}": {
       "get": {
         "summary": "Download error",
