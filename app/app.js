@@ -70,18 +70,25 @@ app.all('/api/echo-from-text/:status?', plainTextParser, (req, res) => {
   response["echo-qs"] = req.query;
   response["echo-body-text"] = req.body;
 
-  function convertToJson(){
+  function convertToJson(data){
     try {
-      return JSON.parse(req.body);
+      let parsed = JSON.parse(data);
+
+      if (parsed instanceof Object) {
+        return parsed;
+      }
+      else {
+        return JSON.parse(parsed);
+      }
     }
     catch(error) {
       return null;
     }
   }
 
-  let parsed = convertToJson();
+  let parsed = convertToJson(req.body);
 
-  response = {...response, ...parsed};
+  response = {...parsed, ...response};
 
   if (req.params.status !== undefined) {
     res.status(req.params.status).json(response);

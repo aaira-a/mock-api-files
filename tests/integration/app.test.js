@@ -193,6 +193,16 @@ describe('ALL /api/echo-from-text/:status?', () => {
       })
   });
 
+  it('should convert escaped text request body to json and return in body', () => {
+    return request(app)
+      .post('/api/echo-from-text')
+      .set('Content-Type', 'text/plain')
+      .send("\"{\\\"abc\\\": true, \\\"def\\\": 123, \\\"message\\\": \\\"message1\\\"}\"")
+      .then((response) => {
+        expect(response.body).to.include({'abc': true, 'def': 123, 'message': 'message1'});
+      })
+  });
+
   [200, 400, 401, 403, 404, 405, 410, 500, 502, 503, 504].forEach((status) => {
     it('should return ' + status + ' status if supplied in route parameter', () => {
       return request(app)
