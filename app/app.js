@@ -54,7 +54,13 @@ app.all('/api/echo/:status?', (req, res) => {
   response["echo-headers"] = req.headers;
   response["echo-qs"] = req.query;
 
-  response = {...response, ...req.body};
+  if (req.headers.hasOwnProperty("content-type")) {
+    response["echo-body-content-type"] = req.headers["content-type"]
+  }
+
+  if (req.hasOwnProperty("body")) {
+    response["echo-body"] = req.body;
+  }
 
   if (req.params.status !== undefined) {
     res.status(req.params.status).json(response);
