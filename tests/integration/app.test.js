@@ -235,6 +235,7 @@ describe('GET /api/files/download/base64', () => {
       .get('/api/files/download/base64')
       .then((response) => {
         expect(response.status).to.eql(200);
+        expect(response.headers['content-disposition']).to.eql('attachment; filename=publicdomain.png');
         expect(response.body['fileContent']).to.eql(content);
         expect(response.body['originalName']).to.eql('publicdomain.png');
         expect(response.body['mimeType']).to.eql('image/png');
@@ -313,6 +314,7 @@ describe('POST /api/files/download/octet-stream', () => {
     return request(app)
       .get('/api/files/download/octet-stream')
       .expect(200)
+      .expect('content-disposition', 'attachment; filename=publicdomain.png')
       .expect(file)
       .expect('content-type', 'application/octet-stream')
       .expect('originalName', 'publicdomain.png')
@@ -352,6 +354,7 @@ describe('GET /api/files/download/uri', () => {
       .get('/api/files/download/uri')
       .then((response) => {
         expect(response.status).to.eql(200);
+        expect(response.headers['content-disposition']).to.eql('attachment; filename=publicdomain.png');
         expect(response.body['uri']).to.eql(fileUri);
         expect(response.body['originalName']).to.eql('publicdomain.png');
         expect(response.body['mimeType']).to.eql('image/png');
