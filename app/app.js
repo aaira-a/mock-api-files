@@ -113,7 +113,7 @@ app.get('/api/files/download/base64', (req, res) => {
   const content = file.toString('base64');
   const hash = crypto.createHash('md5').update(file).digest("hex");
 
-  res.set('Content-Disposition', 'attachment; filename=publicdomain.png');
+  res.set('Content-Disposition', 'attachment; filename="publicdomain.png"');
 
   let response = {
     "fileContent": content,
@@ -164,7 +164,7 @@ app.get('/api/files/download/octet-stream', (req, res) => {
   const file = fs.readFileSync(filepath);
 
   res.set({
-    "Content-Disposition": "attachment; filename=publicdomain.png",
+    "Content-Disposition": "attachment; filename=\"publicdomain.png\"",
     "originalName": "publicdomain.png",
     "mimeType": "image/png",
     "md5": "c9469b266705cf08cfa37f0cf834d11f",
@@ -195,7 +195,7 @@ app.post('/api/files/upload/octet-stream', octetStreamParser, async (req, res) =
 
 app.get('/api/files/download/uri', (req, res) => {
 
-  res.set('Content-Disposition', 'attachment; filename=publicdomain.png');
+  res.set('Content-Disposition', 'attachment; filename="publicdomain.png"');
 
   let response = {
     "uri": 'https://azamstatic.blob.core.windows.net/static/publicdomain.png',
