@@ -296,33 +296,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "object",
-              "properties": {
-                "fileContent": {
-                  "type": "string",
-                  "format": "binary"
-                },
-                "originalName": {
-                  "type": "string",
-                  "description": "Original file name Output",
-                  "x-ntx-summary": "Original file name Output"
-                },
-                "mimeType": {
-                  "type": "string",
-                  "description": "MIME type Output",
-                  "x-ntx-summary": "MIME type Output"
-                },
-                "md5": {
-                  "type": "string",
-                  "description": "MD5 Output",
-                  "x-ntx-summary": "MD5 Output"
-                },
-                "size": {
-                  "type": "integer",
-                  "description": "File size Output",
-                  "x-ntx-summary": "File size Output"
-                }
-              }
+              "type": "file"
             }
           }
         }
