@@ -84,6 +84,14 @@ describe('ALL /api/echo/:status?', () => {
       })
   });
 
+  it('should return orignal url in echo-originalurl property', () => {
+    return request(app)
+      .get('/api/echo?abc=def&ghi=jkl')
+      .then((response) => {
+        expect(response.body['echo-originalurl']).to.eql('/api/echo?abc=def&ghi=jkl');
+      })
+  });
+
   ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'].forEach((method) => {
     it('should return ' + method + ' method in echo-method key', () => {
       return request(app)
