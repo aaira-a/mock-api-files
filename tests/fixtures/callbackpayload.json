@@ -1,0 +1,13 @@
+{
+  "returnData": {
+    "c_workflow_instance_id": "a_1_1",
+    "se_setext_1": "se text 123",
+    "c_wfvar_2_output": "output1",
+    "c_wfvar_1": "notoutput2"
+  },
+  "workflow": {
+    "id": "c4d",
+    "name": "",
+    "publishedId": "8f5"
+  }
+}
