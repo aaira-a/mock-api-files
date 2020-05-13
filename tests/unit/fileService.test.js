@@ -49,9 +49,31 @@ describe('fileService', () => {
       })
     });
 
-    const content = await fileService.getFile(service, 'path123.json');
+    const content = await fileService.getFileAsJson(service, 'path123.json');
 
     expect(service.getObject.calledWith(args)).to.eql(true);
-    expect(JSON.parse(content)).to.eql(JSON.parse(buffer));
+    expect(content).to.eql(JSON.parse(buffer));
   });
+
+  it('saveJson saves json object into S3', async () => {
+    const content = JSON.parse(fs.readFileSync('tests/fixtures/callbackpayload.json'));
+    const args = {
+      Bucket: 'bucket012',
+      Key: 'path123.json',
+      Body: JSON.stringify(content),
+      ContentType: 'application/json'
+    }
+    service = sinon.stub();
+    service.putObject = sinon.stub().returns({
+      promise: sinon.stub().returns({
+        Expiration: 'expiry-date="xxx", rule-id="yyy"',
+        ETag: '"zzz"'
+      })
+    });
+
+    const result = await fileService.saveJsonAsFile(service, 'path123.json', content);
+
+    expect(service.putObject.calledWith(args)).to.eql(true);
+  });
+
 });
