@@ -472,6 +472,15 @@ app.post('/api/async-callback', asyncCallbackRoute.post);
 
 app.use('/api/sleep', sleepRoute.getSleep);
 
+app.get('/api/data/array/integer', (req, res) => {
+  let count = parseInt(req.query.elements);
+
+  let elements = [...Array(count+1).keys()]
+  elements.shift();
+
+  res.json(elements);
+})
+
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError) {
     let response = {};

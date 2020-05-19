@@ -1199,3 +1199,15 @@ describe('POST /api/async-callback', () => {
   });
 
 });
+
+describe('GET /api/data/array/integer', () => {
+  it('should return counter elements in array of integers', () => {
+    return request(app)
+      .get('/api/data/array/integer?elements=10')
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.headers['content-type']).to.include('application/json');
+        expect(response.body).to.eql([1,2,3,4,5,6,7,8,9,10]);
+      })
+  });  
+});

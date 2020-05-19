@@ -892,6 +892,32 @@
           }
         }
       }
+    },
+    "/data/array/integer": {
+      "get": {
+        "summary": "Returns array of integers",
+        "description": "Returns array of integers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "elements",
+            "description": "Number of elements to be returned",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
