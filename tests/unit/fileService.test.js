@@ -55,6 +55,30 @@ describe('fileService', () => {
     expect(content).to.eql(JSON.parse(buffer));
   });
 
+  it('getFile returns error object if failing to retrieve file from S3', async () => {
+    const args = {
+      Bucket: 'bucket012',
+      Key: 'path123.json'
+    }
+
+    const errorObject = {
+      Error: 'Could not retrieve and/or parse file from S3: error1',
+      Bucket: 'bucket012',
+      Key: 'path123.json'
+    }
+    service = sinon.stub();
+    service.getObject = sinon.stub().returns({
+      promise: sinon.stub().returns(
+        Promise.reject({message: 'error1'})
+      )
+    });
+
+    const content = await fileService.getFileAsJson(service, 'path123.json');
+
+    expect(service.getObject.calledWith(args)).to.eql(true);
+    expect(content).to.eql(errorObject);
+  });
+
   it('getFile returns error object if failing to parse file from S3', async () => {
     const buffer = fs.readFileSync('tests/fixtures/callbackpayloadinvalid.json');
     const args = {
@@ -63,9 +87,9 @@ describe('fileService', () => {
     }
 
     const errorObject = {
-      error: 'Could not retrieve and/or parse file from S3: ',
-      bucket: 'bucket012',
-      key: 'path123.json'
+      Error: 'Could not retrieve and/or parse file from S3: Unexpected token o in JSON at position 1',
+      Bucket: 'bucket012',
+      Key: 'path123.json'
     }
     service = sinon.stub();
     service.getObject = sinon.stub().returns({
@@ -77,9 +101,7 @@ describe('fileService', () => {
     const content = await fileService.getFileAsJson(service, 'path123.json');
 
     expect(service.getObject.calledWith(args)).to.eql(true);
-    expect(content.error).to.include(errorObject.error);
-    expect(content.bucket).to.eql(errorObject.bucket);
-    expect(content.key).to.eql(errorObject.key);
+    expect(content).to.eql(errorObject);
   });
 
   it('saveJson saves json object into S3', async () => {
@@ -101,6 +123,86 @@ describe('fileService', () => {
     const result = await fileService.saveJsonAsFile(service, 'path123.json', content);
 
     expect(service.putObject.calledWith(args)).to.eql(true);
+  });
+
+  it('listFiles retrieves files list from S3 and returns keys', async () => {
+    const args = {
+      Bucket: 'bucket012',
+      Prefix: 'prefix1/'
+    }
+
+    const expected = {
+      Contents: [
+        {Key: 'prefix1/item1.json'},
+        {Key: 'prefix1/item2.json'}
+      ],
+        Name: 'bucket012',
+        Prefix: 'prefix1/',
+        KeyCount: 2
+    }
+    service = sinon.stub();
+    service.listObjectsV2 = sinon.stub().returns({
+      promise: sinon.stub().returns(
+        expected
+      )
+    });
+
+    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+
+    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(result).to.eql(expected);
+  });
+
+  it('listFiles returns empty result when failing to retrieve files list from S3', async () => {
+    const args = {
+      Bucket: 'bucket012',
+      Prefix: 'prefix1/'
+    }
+
+    const errorObject = {
+      Error: 'Could not retrieve file list from S3: error2',
+      Contents: [],
+      Name: 'bucket012',
+      Prefix: 'prefix1/',
+      KeyCount: 0
+    }
+
+    service = sinon.stub();
+    service.listObjectsV2 = sinon.stub().returns({
+      promise: sinon.stub().returns(
+        Promise.reject({message: 'error2'})
+      )
+    });
+
+    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+
+    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(result).to.eql(errorObject);
+  });
+
+  it('listFiles returns empty result when receiving empty files list from S3', async () => {
+    const args = {
+      Bucket: 'bucket012',
+      Prefix: 'prefix1/'
+    }
+
+    const expected = {
+      Contents: [],
+        Name: 'bucket012',
+        Prefix: 'prefix1/',
+        KeyCount: 0
+    }
+    service = sinon.stub();
+    service.listObjectsV2 = sinon.stub().returns({
+      promise: sinon.stub().returns(
+        expected
+      )
+    });
+
+    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+
+    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(result).to.eql(expected);
   });
 
 });

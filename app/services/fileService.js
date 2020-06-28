@@ -25,9 +25,9 @@ exports.getFileAsJson = async (service, key) => {
 
   } catch (e) {
     return {
-      'error': `Could not retrieve and/or parse file from S3: ${e.message}`,
-      'bucket': process.env.MOCK_API_S3_BUCKET_NAME,
-      'key': key
+      'Error': `Could not retrieve and/or parse file from S3: ${e.message}`,
+      'Bucket': process.env.MOCK_API_S3_BUCKET_NAME,
+      'Key': key
     };
   }
 
@@ -48,6 +48,31 @@ exports.saveJsonAsFile = async (service, key, content) => {
 
   } catch (e) {
     throw new Error(`Could not save file to S3: ${e.message}`)
+  }
+
+}
+
+exports.listFilesWithPrefix = async (service, prefix) => {
+
+  try {
+
+    const params = {
+      Bucket: process.env.MOCK_API_S3_BUCKET_NAME,
+      Prefix: prefix
+    };
+
+  const data = await service.listObjectsV2(params).promise();
+
+  return data;
+
+  } catch (e) {
+    return {
+      'Error': `Could not retrieve file list from S3: ${e.message}`,
+      'Name': process.env.MOCK_API_S3_BUCKET_NAME,
+      'Prefix': prefix,
+      'Contents': [],
+      'KeyCount': 0
+    };
   }
 
 }
