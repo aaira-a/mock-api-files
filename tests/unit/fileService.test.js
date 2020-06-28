@@ -55,6 +55,33 @@ describe('fileService', () => {
     expect(content).to.eql(JSON.parse(buffer));
   });
 
+  it('getFile returns error object if failing to parse file from S3', async () => {
+    const buffer = fs.readFileSync('tests/fixtures/callbackpayloadinvalid.json');
+    const args = {
+      Bucket: 'bucket012',
+      Key: 'path123.json'
+    }
+
+    const errorObject = {
+      error: 'Could not retrieve and/or parse file from S3: ',
+      bucket: 'bucket012',
+      key: 'path123.json'
+    }
+    service = sinon.stub();
+    service.getObject = sinon.stub().returns({
+      promise: sinon.stub().returns({
+        Body: buffer
+      })
+    });
+
+    const content = await fileService.getFileAsJson(service, 'path123.json');
+
+    expect(service.getObject.calledWith(args)).to.eql(true);
+    expect(content.error).to.include(errorObject.error);
+    expect(content.bucket).to.eql(errorObject.bucket);
+    expect(content.key).to.eql(errorObject.key);
+  });
+
   it('saveJson saves json object into S3', async () => {
     const content = JSON.parse(fs.readFileSync('tests/fixtures/callbackpayload.json'));
     const args = {

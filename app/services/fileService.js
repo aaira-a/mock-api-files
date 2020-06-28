@@ -24,7 +24,11 @@ exports.getFileAsJson = async (service, key) => {
   return JSON.parse(data.Body.toString('utf-8'));
 
   } catch (e) {
-    throw new Error(`Could not retrieve file from S3: ${e.message}`)
+    return {
+      'error': `Could not retrieve and/or parse file from S3: ${e.message}`,
+      'bucket': process.env.MOCK_API_S3_BUCKET_NAME,
+      'key': key
+    };
   }
 
 }
