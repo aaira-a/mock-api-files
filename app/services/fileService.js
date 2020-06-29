@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 
 
-exports.service = () => {
+exports.client = () => {
   return new AWS.S3({
     accessKeyId: process.env.MOCK_API_S3_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.MOCK_API_S3_AWS_SECRET_ACCESS_KEY,
@@ -10,7 +10,7 @@ exports.service = () => {
 }
 
 
-exports.getFileAsJson = async (service, key) => {
+exports.getFileAsJson = async (client, key) => {
 
   try {
 
@@ -19,7 +19,7 @@ exports.getFileAsJson = async (service, key) => {
       Key: key
     };
 
-  const data = await service.getObject(params).promise();
+  const data = await client.getObject(params).promise();
 
   return JSON.parse(data.Body.toString('utf-8'));
 
@@ -33,7 +33,7 @@ exports.getFileAsJson = async (service, key) => {
 
 }
 
-exports.saveJsonAsFile = async (service, key, content) => {
+exports.saveJsonAsFile = async (client, key, content) => {
 
   try {
 
@@ -44,7 +44,7 @@ exports.saveJsonAsFile = async (service, key, content) => {
       ContentType: 'application/json'
     };
 
-  return await service.putObject(params).promise();
+  return await client.putObject(params).promise();
 
   } catch (e) {
     throw new Error(`Could not save file to S3: ${e.message}`)
@@ -52,7 +52,7 @@ exports.saveJsonAsFile = async (service, key, content) => {
 
 }
 
-exports.listFilesWithPrefix = async (service, prefix) => {
+exports.listFilesWithPrefix = async (client, prefix) => {
 
   try {
 
@@ -61,7 +61,7 @@ exports.listFilesWithPrefix = async (service, prefix) => {
       Prefix: prefix
     };
 
-  const data = await service.listObjectsV2(params).promise();
+  const data = await client.listObjectsV2(params).promise();
 
   return data;
 

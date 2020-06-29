@@ -30,7 +30,7 @@ describe('fileService', () => {
     }
     AWS.S3 = sinon.stub();
 
-    fileService.service();
+    fileService.client();
 
     expect(AWS.S3.calledWithNew(connectionInfo)).to.eql(true);
 
@@ -42,16 +42,16 @@ describe('fileService', () => {
       Bucket: 'bucket012',
       Key: 'path123.json'
     }
-    service = sinon.stub();
-    service.getObject = sinon.stub().returns({
+    client = sinon.stub();
+    client.getObject = sinon.stub().returns({
       promise: sinon.stub().returns({
         Body: buffer
       })
     });
 
-    const content = await fileService.getFileAsJson(service, 'path123.json');
+    const content = await fileService.getFileAsJson(client, 'path123.json');
 
-    expect(service.getObject.calledWith(args)).to.eql(true);
+    expect(client.getObject.calledWith(args)).to.eql(true);
     expect(content).to.eql(JSON.parse(buffer));
   });
 
@@ -66,16 +66,16 @@ describe('fileService', () => {
       Bucket: 'bucket012',
       Key: 'path123.json'
     }
-    service = sinon.stub();
-    service.getObject = sinon.stub().returns({
+    client = sinon.stub();
+    client.getObject = sinon.stub().returns({
       promise: sinon.stub().returns(
         Promise.reject({message: 'error1'})
       )
     });
 
-    const content = await fileService.getFileAsJson(service, 'path123.json');
+    const content = await fileService.getFileAsJson(client, 'path123.json');
 
-    expect(service.getObject.calledWith(args)).to.eql(true);
+    expect(client.getObject.calledWith(args)).to.eql(true);
     expect(content).to.eql(errorObject);
   });
 
@@ -91,16 +91,16 @@ describe('fileService', () => {
       Bucket: 'bucket012',
       Key: 'path123.json'
     }
-    service = sinon.stub();
-    service.getObject = sinon.stub().returns({
+    client = sinon.stub();
+    client.getObject = sinon.stub().returns({
       promise: sinon.stub().returns({
         Body: buffer
       })
     });
 
-    const content = await fileService.getFileAsJson(service, 'path123.json');
+    const content = await fileService.getFileAsJson(client, 'path123.json');
 
-    expect(service.getObject.calledWith(args)).to.eql(true);
+    expect(client.getObject.calledWith(args)).to.eql(true);
     expect(content).to.eql(errorObject);
   });
 
@@ -112,17 +112,17 @@ describe('fileService', () => {
       Body: JSON.stringify(content),
       ContentType: 'application/json'
     }
-    service = sinon.stub();
-    service.putObject = sinon.stub().returns({
+    client = sinon.stub();
+    client.putObject = sinon.stub().returns({
       promise: sinon.stub().returns({
         Expiration: 'expiry-date="xxx", rule-id="yyy"',
         ETag: '"zzz"'
       })
     });
 
-    const result = await fileService.saveJsonAsFile(service, 'path123.json', content);
+    const result = await fileService.saveJsonAsFile(client, 'path123.json', content);
 
-    expect(service.putObject.calledWith(args)).to.eql(true);
+    expect(client.putObject.calledWith(args)).to.eql(true);
   });
 
   it('listFiles retrieves files list from S3 and returns keys', async () => {
@@ -140,16 +140,16 @@ describe('fileService', () => {
         Prefix: 'prefix1/',
         KeyCount: 2
     }
-    service = sinon.stub();
-    service.listObjectsV2 = sinon.stub().returns({
+    client = sinon.stub();
+    client.listObjectsV2 = sinon.stub().returns({
       promise: sinon.stub().returns(
         expected
       )
     });
 
-    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+    const result = await fileService.listFilesWithPrefix(client, 'prefix1/');
 
-    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(client.listObjectsV2.calledWith(args)).to.eql(true);
     expect(result).to.eql(expected);
   });
 
@@ -167,16 +167,16 @@ describe('fileService', () => {
       KeyCount: 0
     }
 
-    service = sinon.stub();
-    service.listObjectsV2 = sinon.stub().returns({
+    client = sinon.stub();
+    client.listObjectsV2 = sinon.stub().returns({
       promise: sinon.stub().returns(
         Promise.reject({message: 'error2'})
       )
     });
 
-    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+    const result = await fileService.listFilesWithPrefix(client, 'prefix1/');
 
-    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(client.listObjectsV2.calledWith(args)).to.eql(true);
     expect(result).to.eql(errorObject);
   });
 
@@ -192,16 +192,16 @@ describe('fileService', () => {
         Prefix: 'prefix1/',
         KeyCount: 0
     }
-    service = sinon.stub();
-    service.listObjectsV2 = sinon.stub().returns({
+    client = sinon.stub();
+    client.listObjectsV2 = sinon.stub().returns({
       promise: sinon.stub().returns(
         expected
       )
     });
 
-    const result = await fileService.listFilesWithPrefix(service, 'prefix1/');
+    const result = await fileService.listFilesWithPrefix(client, 'prefix1/');
 
-    expect(service.listObjectsV2.calledWith(args)).to.eql(true);
+    expect(client.listObjectsV2.calledWith(args)).to.eql(true);
     expect(result).to.eql(expected);
   });
 
