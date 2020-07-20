@@ -16,10 +16,10 @@ const app = express();
 const asyncCallbackRoute = require("./routes/asyncCallback");
 const sleepRoute = require("./routes/sleep");
 
-const octetStreamParser = bodyParser.raw({type: 'application/octet-stream', limit: '50mb'});
+const octetStreamParser = bodyParser.raw({type: 'application/octet-stream', limit: '5000mb'});
 const plainTextParser = bodyParser.text();
 
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({limit: '5000mb'}));
 app.use(express.urlencoded());
 
 app.use((req, res, next) => {
