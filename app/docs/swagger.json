@@ -169,6 +169,59 @@
         }
       }
     },
+    "/files/download/base64/multi": {
+      "get": {
+        "summary": "Download multiple files as base64",
+        "description": "Download multiple files as base64",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of files",
+                  "x-ntx-summary": "Number of files"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "fileContent": {
+                        "type": "string",
+                        "format": "byte"
+                      },
+                      "originalName": {
+                        "type": "string",
+                        "description": "Original file name Output",
+                        "x-ntx-summary": "Original file name Output"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "MIME type Output",
+                        "x-ntx-summary": "MIME type Output"
+                      },
+                      "md5": {
+                        "type": "string",
+                        "description": "MD5 Output",
+                        "x-ntx-summary": "MD5 Output"
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "File size Output",
+                        "x-ntx-summary": "File size Output"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/upload/base64": {
       "post": {
         "summary": "Upload file as base64",
@@ -222,6 +275,82 @@
                   "type": "integer",
                   "description": "File size Output",
                   "x-ntx-summary": "File size Output"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/upload/base64/multi": {
+      "post": {
+        "summary": "Upload multiple files as base64",
+        "description": "Upload multiple files as base64",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "rootBody",
+            "description": "Root Body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "fileContent": {
+                    "description": "File to upload",
+                    "x-ntx-summary": "File to upload",
+                    "type": "string",
+                    "format": "byte"
+                  },
+                  "customName": {
+                    "description": "Custom name with extension",
+                    "x-ntx-summary": "Custom name with extension",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of files",
+                  "x-ntx-summary": "Number of files"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "customName": {
+                        "type": "string",
+                        "description": "Custom file name Output",
+                        "x-ntx-summary": "Custom file name Output"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "MIME type Output",
+                        "x-ntx-summary": "MIME type Output"
+                      },
+                      "md5": {
+                        "type": "string",
+                        "description": "MD5 Output",
+                        "x-ntx-summary": "MD5 Output"
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "File size Output",
+                        "x-ntx-summary": "File size Output"
+                      }
+                    }
+                  }
                 }
               }
             }

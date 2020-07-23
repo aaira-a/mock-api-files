@@ -127,6 +127,36 @@ app.get('/api/files/download/base64', (req, res) => {
   res.json(response);
 });
 
+app.get('/api/files/download/base64/multi', (req, res) => {
+
+  let response = {};
+  response["files"] = [];
+
+  filenames = ['publicdomain.png', 'creativecommons.png'];
+
+  for (let i in filenames) {
+    const filepath = path.join(__dirname, 'files', filenames[i]);
+    const file = fs.readFileSync(filepath);
+
+    const content = file.toString('base64');
+    const hash = crypto.createHash('md5').update(file).digest("hex"); 
+
+    const fileDetails = {
+      "fileContent": content,
+      "originalName": filenames[i],
+      "mimeType": "image/png",
+      "md5": hash,
+      "size": Buffer.byteLength(file)
+    };
+
+    response["files"].push(fileDetails);
+  }
+
+  response["count"] = response["files"].length;
+
+  res.json(response);
+});
+
 app.post('/api/files/upload/base64', async (req, res) => {
 
   const buffer = Buffer.from(req.body["fileContent"], 'base64');
@@ -139,6 +169,31 @@ app.post('/api/files/upload/base64', async (req, res) => {
     "md5": hash,
     "size": Buffer.byteLength(buffer, 'base64')
   };
+
+  res.json(response);
+});
+
+app.post('/api/files/upload/base64/multi', async (req, res) => {
+
+  let response = {};
+  response["files"] = [];
+
+  for (let i in req.body) {
+    const buffer = Buffer.from(req.body[i]["fileContent"], 'base64');
+    const mimeInfo = await fileType.fromBuffer(buffer);
+    const hash = crypto.createHash('md5').update(buffer).digest("hex");
+
+    const fileDetails = {
+      "customName": req.body[i]["customName"],
+      "mimeType": mimeInfo["mime"],
+      "md5": hash,
+      "size": Buffer.byteLength(buffer, 'base64')
+    };
+
+    response["files"].push(fileDetails);
+  }
+
+  response["count"] = response["files"].length;
 
   res.json(response);
 });
