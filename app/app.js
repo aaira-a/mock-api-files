@@ -264,6 +264,31 @@ app.get('/api/files/download/uri', (req, res) => {
   res.json(response);
 });
 
+app.get('/api/files/download/uri/multi', (req, res) => {
+
+  let response = {
+    "files": [
+      {
+        "uri": 'https://azamstatic.blob.core.windows.net/static/publicdomain.png',
+        "originalName": "publicdomain.png",
+        "mimeType": "image/png",
+        "md5": 'c9469b266705cf08cfa37f0cf834d11f',
+        "size": 6592
+      },
+      {
+        "uri": 'https://azamstatic.blob.core.windows.net/static/creativecommons.png',
+        "originalName": "creativecommons.png",
+        "mimeType": "image/png",
+        "md5": '64bb88afbfcfe03145d176001d413154',
+        "size": 6413
+      }
+    ],
+    "count": 2
+  };
+
+  res.json(response);
+});
+
 app.post('/api/files/upload/uri', async (req, res) => {
   let sourceUri = req.body["fileUri"];
 
@@ -287,6 +312,42 @@ app.post('/api/files/upload/uri', async (req, res) => {
     res.json(response);
   });
 
+});
+
+app.post('/api/files/upload/uri/multi', async (req, res) => {
+
+  let response = {};
+  response["files"] = [];
+
+  for (let i in req.body) {
+
+    const sourceUri = req.body[i]["fileUri"];
+
+    await axios({
+      method: 'get',
+      url: sourceUri,
+      responseType: 'arraybuffer'
+    })
+    .then(async (downloaded) => {
+      const buffer = Buffer.from(downloaded.data, 'base64');
+      const mimeInfo = await fileType.fromBuffer(buffer);
+      const hash = crypto.createHash('md5').update(buffer).digest("hex");
+
+      const fileDetails = {
+        "customName": req.body[i]["customName"],
+        "mimeType": mimeInfo["mime"],
+        "md5": hash,
+        "size": Buffer.byteLength(buffer, 'base64')
+      };
+
+      response["files"].push(fileDetails);
+    });
+
+  }
+
+  response["count"] = response["files"].length;
+
+  res.json(response);
 });
 
 app.post('/api/all-types', (req, res) => {

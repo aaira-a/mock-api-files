@@ -429,6 +429,29 @@ describe('GET /api/files/download/uri', () => {
   });
 });
 
+describe('GET /api/files/download/uri/multi', () => {
+  it('should return file uri in response', () => {
+    const fileUri1 = 'https://azamstatic.blob.core.windows.net/static/publicdomain.png';
+    const fileUri2 = 'https://azamstatic.blob.core.windows.net/static/creativecommons.png';
+    return request(app)
+      .get('/api/files/download/uri/multi')
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]['uri']).to.eql(fileUri1);
+        expect(response.body['files'][0]['originalName']).to.eql('publicdomain.png');
+        expect(response.body['files'][0]['mimeType']).to.eql('image/png');
+        expect(response.body['files'][0]['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
+        expect(response.body['files'][0]['size']).to.eql(6592);
+        expect(response.body['files'][1]['uri']).to.eql(fileUri2);
+        expect(response.body['files'][1]['originalName']).to.eql('creativecommons.png');
+        expect(response.body['files'][1]['mimeType']).to.eql('image/png');
+        expect(response.body['files'][1]['md5']).to.eql('64bb88afbfcfe03145d176001d413154');
+        expect(response.body['files'][1]['size']).to.eql(6413);
+      })
+  });
+});
+
 describe('POST /api/files/upload/uri', () => {
   it('should return uploaded file information in response', () => {
     const fileUri = 'https://azamstatic.blob.core.windows.net/static/publicdomain.png';
@@ -442,6 +465,32 @@ describe('POST /api/files/upload/uri', () => {
         expect(response.body['mimeType']).to.eql('image/png');
         expect(response.body['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
         expect(response.body['size']).to.eql(6592);
+      })
+  });
+});
+
+describe('POST /api/files/upload/uri/multi', () => {
+  it('should return uploaded file information in response', () => {
+    const fileUri1 = 'https://azamstatic.blob.core.windows.net/static/publicdomain.png';
+    const fileUri2 = 'https://azamstatic.blob.core.windows.net/static/creativecommons.png';    
+    return request(app)
+      .post('/api/files/upload/uri/multi')
+      .set('Content-Type', 'application/json')
+      .send([
+        {'fileUri': fileUri1, 'customName': 'publicdomain1.png'},
+        {'fileUri': fileUri2, 'customName': 'creativecommons1.png'}
+      ])
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]['customName']).to.eql('publicdomain1.png');
+        expect(response.body['files'][0]['mimeType']).to.eql('image/png');
+        expect(response.body['files'][0]['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
+        expect(response.body['files'][0]['size']).to.eql(6592);
+        expect(response.body['files'][1]['customName']).to.eql('creativecommons1.png');
+        expect(response.body['files'][1]['mimeType']).to.eql('image/png');
+        expect(response.body['files'][1]['md5']).to.eql('64bb88afbfcfe03145d176001d413154');
+        expect(response.body['files'][1]['size']).to.eql(6413);
       })
   });
 });
