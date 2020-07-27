@@ -157,6 +157,36 @@ app.get('/api/files/download/base64/multi', (req, res) => {
   res.json(response);
 });
 
+app.get('/api/files/download/base64/multi/flattened', (req, res) => {
+
+  let response = {};
+  response["files"] = [];
+  response["metadata"] = []
+
+  filenames = ['publicdomain.png', 'creativecommons.png'];
+
+  for (let i in filenames) {
+    const filepath = path.join(__dirname, 'files', filenames[i]);
+    const file = fs.readFileSync(filepath);
+
+    const content = file.toString('base64');
+    const hash = crypto.createHash('md5').update(file).digest("hex"); 
+
+    const fileDetails = {
+      "originalName": filenames[i],
+      "mimeType": "image/png",
+      "md5": hash,
+      "size": Buffer.byteLength(file)
+    };
+    response["files"].push(content);
+    response["metadata"].push(fileDetails);
+  }
+
+  response["count"] = response["files"].length;
+
+  res.json(response);
+});
+
 app.post('/api/files/upload/base64', async (req, res) => {
 
   const buffer = Buffer.from(req.body["fileContent"], 'base64');
@@ -277,6 +307,33 @@ app.get('/api/files/download/uri/multi', (req, res) => {
       },
       {
         "uri": 'https://azamstatic.blob.core.windows.net/static/creativecommons.png',
+        "originalName": "creativecommons.png",
+        "mimeType": "image/png",
+        "md5": '64bb88afbfcfe03145d176001d413154',
+        "size": 6413
+      }
+    ],
+    "count": 2
+  };
+
+  res.json(response);
+});
+
+app.get('/api/files/download/uri/multi/flattened', (req, res) => {
+
+  let response = {
+    "files": [
+      'https://azamstatic.blob.core.windows.net/static/publicdomain.png',
+      'https://azamstatic.blob.core.windows.net/static/creativecommons.png'
+    ],
+    "metadata": [
+      {
+        "originalName": "publicdomain.png",
+        "mimeType": "image/png",
+        "md5": 'c9469b266705cf08cfa37f0cf834d11f',
+        "size": 6592
+      },
+      {
         "originalName": "creativecommons.png",
         "mimeType": "image/png",
         "md5": '64bb88afbfcfe03145d176001d413154',

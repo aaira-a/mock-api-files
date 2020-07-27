@@ -280,6 +280,31 @@ describe('GET /api/files/download/base64/multi', () => {
   });
 });
 
+describe('GET /api/files/download/base64/multi/flattened', () => {
+  it('should return file in response', () => {
+    const file1 = fs.readFileSync('app/files/publicdomain.png');
+    const file2 = fs.readFileSync('app/files/creativecommons.png');
+    const content1 = file1.toString('base64');
+    const content2 = file2.toString('base64');
+
+    return request(app)
+      .get('/api/files/download/base64/multi/flattened')
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]).to.eql(content1);
+        expect(response.body['metadata'][0]['originalName']).to.eql('publicdomain.png');
+        expect(response.body['metadata'][0]['mimeType']).to.eql('image/png');
+        expect(response.body['metadata'][0]['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
+        expect(response.body['metadata'][0]['size']).to.eql(6592);
+        expect(response.body['files'][1]).to.eql(content2);
+        expect(response.body['metadata'][1]['originalName']).to.eql('creativecommons.png');
+        expect(response.body['metadata'][1]['mimeType']).to.eql('image/png');
+        expect(response.body['metadata'][1]['md5']).to.eql('64bb88afbfcfe03145d176001d413154');
+        expect(response.body['metadata'][1]['size']).to.eql(6413);
+      })
+  });
+});
 
 describe('POST /api/files/upload/base64', () => {
   it('should return uploaded file information in response', () => {
@@ -448,6 +473,29 @@ describe('GET /api/files/download/uri/multi', () => {
         expect(response.body['files'][1]['mimeType']).to.eql('image/png');
         expect(response.body['files'][1]['md5']).to.eql('64bb88afbfcfe03145d176001d413154');
         expect(response.body['files'][1]['size']).to.eql(6413);
+      })
+  });
+});
+
+describe('GET /api/files/download/uri/multi/flattened', () => {
+  it('should return file uri in response', () => {
+    const fileUri1 = 'https://azamstatic.blob.core.windows.net/static/publicdomain.png';
+    const fileUri2 = 'https://azamstatic.blob.core.windows.net/static/creativecommons.png';
+    return request(app)
+      .get('/api/files/download/uri/multi/flattened')
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]).to.eql(fileUri1);
+        expect(response.body['metadata'][0]['originalName']).to.eql('publicdomain.png');
+        expect(response.body['metadata'][0]['mimeType']).to.eql('image/png');
+        expect(response.body['metadata'][0]['md5']).to.eql('c9469b266705cf08cfa37f0cf834d11f');
+        expect(response.body['metadata'][0]['size']).to.eql(6592);
+        expect(response.body['files'][1]).to.eql(fileUri2);
+        expect(response.body['metadata'][1]['originalName']).to.eql('creativecommons.png');
+        expect(response.body['metadata'][1]['mimeType']).to.eql('image/png');
+        expect(response.body['metadata'][1]['md5']).to.eql('64bb88afbfcfe03145d176001d413154');
+        expect(response.body['metadata'][1]['size']).to.eql(6413);
       })
   });
 });

@@ -222,6 +222,62 @@
         }
       }
     },
+    "/files/download/base64/multi/flattened": {
+      "get": {
+        "summary": "Download multiple files as base64 in flattened array",
+        "description": "Download multiple files as base64 in flattened array",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of files",
+                  "x-ntx-summary": "Number of files"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                },
+                "metadata": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "originalName": {
+                        "type": "string",
+                        "description": "Original file name Output",
+                        "x-ntx-summary": "Original file name Output"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "MIME type Output",
+                        "x-ntx-summary": "MIME type Output"
+                      },
+                      "md5": {
+                        "type": "string",
+                        "description": "MD5 Output",
+                        "x-ntx-summary": "MD5 Output"
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "File size Output",
+                        "x-ntx-summary": "File size Output"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/upload/base64": {
       "post": {
         "summary": "Upload file as base64",
@@ -556,6 +612,64 @@
                         "type": "string",
                         "format": "x-ntx-file-reference"
                       },
+                      "originalName": {
+                        "type": "string",
+                        "description": "Original file name Output",
+                        "x-ntx-summary": "Original file name Output"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "MIME type Output",
+                        "x-ntx-summary": "MIME type Output"
+                      },
+                      "md5": {
+                        "type": "string",
+                        "description": "MD5 Output",
+                        "x-ntx-summary": "MD5 Output"
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "File size Output",
+                        "x-ntx-summary": "File size Output"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/download/uri/multi/flattened": {
+      "get": {
+        "summary": "Download multiple files as URI in flattened array",
+        "description": "Download multiple files as URI in flattened array",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of files",
+                  "x-ntx-summary": "Number of files"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "description": "File do download",
+                    "x-ntx-summary": "File to download",
+                    "type": "string",
+                    "format": "x-ntx-file-reference"
+                  }
+                },
+                "metadata": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
                       "originalName": {
                         "type": "string",
                         "description": "Original file name Output",
