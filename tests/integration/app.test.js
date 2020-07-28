@@ -396,6 +396,72 @@ describe('POST /api/files/upload/form-data', () => {
   });
 });
 
+describe('POST /api/files/upload/form-data/multi', () => {
+  it('should support part with image content type', () => {
+    return request(app)
+      .post('/api/files/upload/form-data/multi')
+      .set('Content-Type', 'multipart/form-data')
+      .field('customName1', 'nasilemak1.jpg')
+      .field('customName2', 'eggs2.jpg')
+      .attach(
+        'file1',
+        'tests/fixtures/nasilemak.jpg',
+        {contentType: 'image/jpeg', filename: 'nasilemak.jpg'}
+      )
+      .attach(
+        'file2',
+        'tests/fixtures/eggs.jpg',
+        {contentType: 'image/jpeg', filename: 'eggs.jpg'}
+      )
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]['originalName']).to.eql('nasilemak.jpg');
+        expect(response.body['files'][0]['customName']).to.eql('nasilemak1.jpg');
+        expect(response.body['files'][0]['mimeType']).to.eql('image/jpeg');
+        expect(response.body['files'][0]['md5']).to.eql('e1a74395061dfe923b30546105fca578');
+        expect(response.body['files'][0]['size']).to.eql(3884192);
+        expect(response.body['files'][1]['originalName']).to.eql('eggs.jpg');
+        expect(response.body['files'][1]['customName']).to.eql('eggs2.jpg');
+        expect(response.body['files'][1]['mimeType']).to.eql('image/jpeg');
+        expect(response.body['files'][1]['md5']).to.eql('9dc143a1ca18375c3e1d0bb7f64e6f80');
+        expect(response.body['files'][1]['size']).to.eql(1754544);
+      })
+  });
+
+  it('should support part with octet-stream content type', () => {
+    return request(app)
+      .post('/api/files/upload/form-data/multi')
+      .set('Content-Type', 'multipart/form-data')
+      .field('customName1', 'nasilemak1.jpg')
+      .field('customName2', 'eggs2.jpg')
+      .attach(
+        'file1',
+        'tests/fixtures/nasilemak.jpg',
+        {contentType: 'application/octet-stream', filename: 'nasilemak.jpg'}
+      )
+      .attach(
+        'file2',
+        'tests/fixtures/eggs.jpg',
+        {contentType: 'application/octet-stream', filename: 'eggs.jpg'}
+      )
+      .then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body['count']).to.eql(2);
+        expect(response.body['files'][0]['originalName']).to.eql('nasilemak.jpg');
+        expect(response.body['files'][0]['customName']).to.eql('nasilemak1.jpg');
+        expect(response.body['files'][0]['mimeType']).to.eql('image/jpeg');
+        expect(response.body['files'][0]['md5']).to.eql('e1a74395061dfe923b30546105fca578');
+        expect(response.body['files'][0]['size']).to.eql(3884192);
+        expect(response.body['files'][1]['originalName']).to.eql('eggs.jpg');
+        expect(response.body['files'][1]['customName']).to.eql('eggs2.jpg');
+        expect(response.body['files'][1]['mimeType']).to.eql('image/jpeg');
+        expect(response.body['files'][1]['md5']).to.eql('9dc143a1ca18375c3e1d0bb7f64e6f80');
+        expect(response.body['files'][1]['size']).to.eql(1754544);
+      })
+  });
+});
+
 describe('POST /api/files/download/octet-stream', () => {
   it('should return file in response', () => {
 

@@ -245,6 +245,46 @@ app.post('/api/files/upload/form-data', upload.single('file1'), async (req, res)
   res.json(response);
 });
 
+app.post('/api/files/upload/form-data/multi', upload.any(), async (req, res) => {
+
+  let response = {};
+  response["files"] = [];
+
+  const file1 = req.files[0]
+  const buffer1 = Buffer.from(file1.buffer, 'binary');
+  const mimeInfo1 = await fileType.fromBuffer(buffer1);
+  const hash1 = crypto.createHash('md5').update(buffer1).digest("hex");
+
+  let fileDetails1 = {
+    "originalName": file1.originalname,
+    "customName": req.body["customName1"],
+    "mimeType": mimeInfo1["mime"],
+    "md5": hash1,
+    "size": file1.size
+  };
+
+  response["files"].push(fileDetails1);
+
+  const file2 = req.files[1]
+  const buffer2 = Buffer.from(file2.buffer, 'binary');
+  const mimeInfo2 = await fileType.fromBuffer(buffer2);
+  const hash2 = crypto.createHash('md5').update(buffer2).digest("hex");
+
+  let fileDetails2 = {
+    "originalName": file2.originalname,
+    "customName": req.body["customName2"],
+    "mimeType": mimeInfo2["mime"],
+    "md5": hash2,
+    "size": file2.size
+  };
+
+  response["files"].push(fileDetails2);
+
+  response["count"] = response["files"].length;
+
+  res.json(response);
+});
+
 app.get('/api/files/download/octet-stream', (req, res) => {
   const filepath = path.join(__dirname, 'files', 'publicdomain.png');
   const file = fs.readFileSync(filepath);

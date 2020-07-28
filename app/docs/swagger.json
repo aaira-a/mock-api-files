@@ -473,6 +473,91 @@
         }
       }
     },
+    "/files/upload/form-data/multi": {
+      "post": {
+        "summary": "Upload multiple files as multipart/form-data",
+        "description": "Upload multiple files as multipart/form-data",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file1",
+            "description": "File 1 to upload",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "in": "formData",
+            "name": "file2",
+            "description": "File 2 to upload",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "in": "formData",
+            "name": "customName1",
+            "description": "Custom name 1 with extension",
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "customName2",
+            "description": "Custom name 2 with extension",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of files",
+                  "x-ntx-summary": "Number of files"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "originalName": {
+                        "type": "string",
+                        "description": "Original file name Output",
+                        "x-ntx-summary": "Original file name Output"
+                      },
+                      "customName": {
+                        "type": "string",
+                        "description": "Custom file name Output",
+                        "x-ntx-summary": "Custom file name Output"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "MIME type Output",
+                        "x-ntx-summary": "MIME type Output"
+                      },
+                      "md5": {
+                        "type": "string",
+                        "description": "MD5 Output",
+                        "x-ntx-summary": "MD5 Output"
+                      },
+                      "size": {
+                        "type": "integer",
+                        "description": "File size Output",
+                        "x-ntx-summary": "File size Output"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/download/octet-stream": {
       "get": {
         "summary": "Download file as octet-stream",
