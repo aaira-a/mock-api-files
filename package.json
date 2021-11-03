@@ -30,6 +30,6 @@
     "mocha": "^7.1.1",
     "sinon": "^7.5.0",
     "supertest": "^3.4.2",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   }
 }
